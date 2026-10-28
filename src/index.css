@@ -1,0 +1,156 @@
+@import "tailwindcss";
+
+/* shadcn-style colour tokens used by the animate-ui Switch, mapped to this
+   app's palette. `inline` keeps them referencing --brand so the accent tracks
+   live. */
+@theme inline {
+  --color-primary: var(--brand);
+  --color-primary-foreground: #ffffff;
+  --color-input: #d1d5db;
+  --color-background: #ffffff;
+  --color-foreground: #f9fafb;
+  --color-ring: var(--brand);
+}
+
+:root {
+  --sidebar-width: 240px;
+  --sidebar-collapsed-width: 64px;
+  /* Default accent — Forest (--hue-3) */
+  --brand: #355834;
+  --brand-light: #4c7a4a;
+  --brand-dark: #22391f;
+
+  /* Theme hues for the settings colour picker */
+  --hue-1: #037971; /* Blue Spruce */
+  --hue-2: #49111C; /* Crimson */
+  --hue-3: #355834; /* Forest */
+  --hue-4: #7a4a1a; /* Amber */
+  --hue-5: #D7263D; /* Classic Crimson */
+  --hue-6: #061A40; /* Prussian Blue */
+
+  /* Accent-derived background gradient. Tracks --brand-bg when set (the secret
+     UNBC theme uses a different background colour than its text accent),
+     otherwise follows --brand — so it changes the moment the accent updates. */
+  --bg-grad-from: color-mix(in srgb, var(--brand-bg, var(--brand)) 12%, #ffffff);
+  --bg-grad-to:   color-mix(in srgb, var(--brand-bg, var(--brand))  3%, #ffffff);
+}
+
+/* App background: the accent gradient the container tiles sit on. */
+.app-bg {
+  background: linear-gradient(160deg, var(--bg-grad-from), var(--bg-grad-to));
+}
+
+/* Container tiles: translucent so the gradient shows through behind them. */
+.bg-white.rounded-xl {
+  background-color: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(2px);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+/* Global safety net: nothing on any page — however it overflows its box — can
+   ever cause the whole viewport to scroll sideways. Fixes rubber-band/jitter
+   on mobile browsers, which otherwise let a single too-wide child drag the
+   entire page horizontally. */
+html, body {
+  overflow-x: hidden;
+  max-width: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, sans-serif;
+}
+
+#root {
+  overflow-x: hidden;
+}
+
+/* Reset Bootstrap link color inside the sidebar */
+aside a {
+  color: inherit;
+  text-decoration: none;
+}
+
+aside a:hover {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* ─── Dark mode overrides ─────────────────────────────────────────────────── */
+/* Applied when <html class="dark"> is set by ThemeContext.                    */
+/* The sidebar keeps its brand green; only the main content area goes dark.    */
+
+.dark body,
+.dark #root {
+  background-color: #111827;
+  color: #f9fafb;
+}
+
+/* Dark mode: mix the gradient toward the dark base, and keep tiles translucent
+   (higher specificity than the `.dark .bg-white` override below). */
+.dark {
+  --bg-grad-from: color-mix(in srgb, var(--brand-bg, var(--brand)) 26%, #111827);
+  --bg-grad-to:   color-mix(in srgb, var(--brand-bg, var(--brand))  8%, #111827);
+}
+
+.dark .bg-white.rounded-xl {
+  background-color: rgba(31, 41, 55, 0.6) !important;
+}
+
+/* Layout backgrounds */
+.dark .bg-gray-50  { background-color: #111827 !important; }
+.dark .bg-white    { background-color: #1f2937 !important; }
+.dark .bg-gray-100 { background-color: #374151 !important; }
+
+/* Borders */
+.dark .border-gray-100 { border-color: #374151 !important; }
+.dark .border-gray-200 { border-color: #4b5563 !important; }
+.dark .divide-gray-100 > * + * { border-color: #374151 !important; }
+
+/* Text */
+.dark .text-black { color: #f9fafb !important; }
+
+/* Inputs & form controls */
+.dark input[type="text"],
+.dark input[type="email"],
+.dark input[type="password"],
+.dark input[type="number"],
+.dark select,
+.dark textarea {
+  background-color: #374151 !important;
+  color: #f9fafb             !important;
+  border-color: #4b5563      !important;
+}
+
+/* Checkboxes keep accent colour */
+.dark input[type="checkbox"] {
+  accent-color: var(--brand-light);
+}
+
+/* Badge / mono chip used in CourseSelection */
+.dark .bg-gray-100.text-gray-500 {
+  background-color: #374151 !important;
+  color: #9ca3af             !important;
+}
+
+/* Hover states */
+.dark .hover\:bg-gray-200:hover { background-color: #4b5563 !important; }
+
+/* Shadows — lighten so they're visible on dark backgrounds */
+.dark .shadow-sm {
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.6) !important;
+}
+
+/* ─── Login hero ──────────────────────────────────────────────────────────── */
+/* Brand navy reads great on the light app-bg but vanishes on the dark one, so
+   flip the title to near-white in dark mode. */
+.login-title { color: var(--brand); }
+.dark .login-title { color: #f9fafb; }
+
+/* Give the navy primary button a faint edge in dark mode so it stays distinct
+   from the dark background. */
+.login-primary { border: 1px solid transparent; }
+.dark .login-primary { border-color: rgba(255, 255, 255, 0.18); }
